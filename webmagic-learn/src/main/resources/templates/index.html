@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>张炳鑫</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+<script type="text/javascript" src="https://cdn.bootcss.com/bootstrap-validator/0.4.4/js/bootstrapValidator.js"></script>
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" src="js/bootstrap-slider.js"></script>
+
+  <script src="layer/layer.js"></script>
+
+
+
+
+</head>
+<body>
+<div class="main">
+	<h1>登录注册可转化</h1>
+	<div class="w3_login">
+		<div class="w3_login_module">
+			<div class="module form-module">
+				<div class="toggle">
+					<i class="fa fa-times fa-pencil"></i>
+					<div class="tooltip">点击切换</div>
+				</div>
+				<div class="form" >
+					<h2>登录账号</h2>
+					<form id="water-standard-form" class="form-horizontal" role="form" >
+						<div class="form-group">
+							<div class="col-md-12">
+								<input type="text"  name="name" id="name" placeholder="请输您的入账号">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-12">
+								<input type="password" class="form-control" name="passwd" id="password" placeholder="请输入您的密码">
+							</div>
+						</div>
+						<div class="form-group">
+						<table style="margin: 0px;padding: 0px;">
+						<tr>
+                         <td><input id="djdj" name="zhangss"  type="text" placeholder="请输入验证码" ></td>
+                         <td><img src="../userInfo/verification"></img></td>
+                         </tr>
+                         <tr>
+                         <td><div style="color: red;display: none;" id="aaa" >验证码不正确(大小写也必须一致)</div></td>
+                         </tr>
+                         </table>
+                          </div>
+                         
+						<button class="btn btn-success" style="width: 330px" type="submit" value="登录" >登录</button>
+					</form>
+				</div>
+				<div class="form">
+					<h2>创建一个账号</h2>
+					<form   id="zhangbingxing" >
+						<div class="form-group">
+							<div class="col-md-12">
+								<input type="text"  name="name" id="name1" placeholder="请输您的入账号">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-12">
+								<input type="password" name="passwd" id="password1" placeholder="请输您的密码">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-12">
+								<input type="text"  name="email" id="email" placeholder="请输您的邮箱">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-12">
+								<input  type="text"  name="phone" id="phone" placeholder="请输您的电话">
+							</div>
+						</div>
+						<button class="btn btn-success" style="width: 330px" type="submit" value="注册" >注册</button>
+					</form>
+				</div>
+				<div class="cta"><a href="#">忘记密码?</a></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+debugger
+$('.toggle').click(function(){
+	$(this).children('i').toggleClass('fa-pencil');
+	$('.form').animate({height: "toggle",'padding-top': 'toggle','padding-bottom': 'toggle',opacity: "toggle"}, "slow");
+	
+});
+
+$(function(){
+	//数据校验
+        $("#water-standard-form").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function (validator, userform, submitButton) {
+            	   debugger
+            	    var xx=  $("#djdj").val()
+            	   $.ajax({
+                       url: "/userInfo/getverification",
+                       type: "get", //提交方式
+                       success: function (data) {
+                    	   debugger
+                    	  if(xx==data){
+                    		  $("#aaa").hide()
+                    		  
+                    		  $.ajax({
+                              url: "/dologin",
+                              type: "post", //提交方式
+                              data: {password :  $("#password").val() , username :  $("#name").val()},
+                              success: function(data){
+                            	  layer.msg('登陆成功'); 
+                            	  window.location.href="/cinema/list.htm"
+                              }
+                    		  })
+                    		  
+                    	  }else{
+                    		  layer.msg('hello'); 
+                    		  $("#aaa").show()
+                    	  }
+                       }
+                   });
+                 
+            },
+            fields: {
+            	passwd: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入密码'
+                        }
+                    }
+                },
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输名称'
+                        }
+                    }
+                },
+                zhangss: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输验证码'
+                        }
+                    }
+                }
+            }
+        });
+	
+	
+      //数据校验
+        $("#zhangbingxing").bootstrapValidator({
+            message: '请输入有效值',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            submitHandler: function (validator, userform, submitButton) {
+              
+            	   var formData = $('#zhangbingxing').serialize(); 
+            	   
+            	   $.ajax({
+                       url: "/TbUser",
+                       type: "post", //提交方式
+                       data: formData,
+                       success: function (data) {
+                    	  
+                    	   layer.msg('注册成功跳转登录页面'); 
+                    	 $(".toggle").click(); 
+                       }
+                   });
+              
+            },
+            fields: {
+            	passwd: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入密码'
+                        }
+                    }
+                },
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输名称'
+                        }
+                    }
+                },
+                email: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入邮箱'
+                        }
+                    }
+                },
+                phone: {
+                    validators: {
+                        notEmpty: {
+                            message: '请输入电话名称'
+                        }
+                    }
+                }
+            }
+        });
+})
+</script>
+<div style="text-align:center;">
+</div>
+</body>
+</html>

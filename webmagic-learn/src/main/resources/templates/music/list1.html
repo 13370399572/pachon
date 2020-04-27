@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+<title>网易云音乐</title>
+<style>
+
+
+
+.pic-item {
+	cursor: pointer;
+	display: block;
+	width: 180px;
+	height: 236px;
+	margin: 2px;
+	border: 2px solid #01AAED;
+}
+
+.picWrap {
+	display: inline-block;
+	width: 180px;
+	height: 236px;
+	margin: 20px 4px;
+}
+
+.fl {
+	float: left;
+}
+
+.title {
+	padding-left: 20px;
+	display: inline-block;
+	width: 180px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#blogPage1 {
+	/* height: 200px; */
+	clear: both;
+}
+</style>
+</head>
+<body>
+	<div th:include="common/header::common"></div>
+	<div class="layui-container main">
+		<div class="layui-container" >
+			<ul class="list-group" >
+				<li  >
+					<div th:each="music:${musicpage.content}" class="picWrap fl"  style="width: 220px">
+					<img style="height: 167px; " th:src="@{${music.imgUrl}}" class="pic-item" src="#" />
+					<marquee onmouseover=this.stop() onmouseout=this.start() vspace="10px" hspace="6px" direction="right" behavior="scroll" scrollamount="3" align="middle" bgcolor="white" width="180px" height="20px">
+					<span style="color:red">歌名:</span>   <span th:text="${music.title}" ></span>  	<span style="color:red">&nbsp &nbsp &nbsp     歌手:</span>   <span th:text="${music.name}" ></span> 
+					</marquee>	
+						<audio style="width: 250px"  id="hh" th:src="@{${music.url}}" controls="controls"  preload="auto" autoplay="autoplay" loop="loop" th:text="${music.title}" ></audio>
+					</div>
+				</li>
+			</ul>
+
+		</div>
+		<div id="blogPage1"></div>
+	</div>
+	
+	<div th:include="common/footer::common"></div>
+	<script th:src="@{/layui/layui.js}"></script>
+	<script>
+	var audios = document.getElementsByTagName("audio");
+	// 暂停函数
+	function pauseAll() {
+	    var self = this;
+	    [].forEach.call(audios, function (i) {
+	        // 将audios中其他的audio全部暂停
+	        i !== self && i.pause();
+	    })
+	}
+	// 给play事件绑定暂停函数
+	[].forEach.call(audios, function (i) {
+	    i.addEventListener("play", pauseAll.bind(i));
+	})
+
+    function go(url) {
+    	  window.open("localhost:8081/music1/list1.htm?singerUrl="+url)
+    }
+ 
+    layui.use('laypage', function () {
+        var laypage = layui.laypage;
+        var total = [[${musicpage.totalElements}]];
+        var size = [[${musicpage.size}]];
+        var num =[[${musicpage.number}]];
+        
+        
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'blogPage1' //注意，这里的 test1 是 ID，不用加 # 号
+            , count: total //数据总数，从服务端得到
+            ,curr:num+1
+            , limit: size
+            , limits: [18, 24, 30, 36]
+            , jump: function (obj, first) {
+                //obj包含了当前分页的所有参数，比如：
+                console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                console.log(obj.limit); //得到每页显示的条数
+
+                //首次不执行
+                if (!first) {
+                    //do something
+                    window.location.href = "/music1/list1.htm?singerUrl="+"https:"+ window.location.href.split(':')[3].split("&")[0]+"&num=" + obj.curr + "&size=" + obj.limit;
+                }
+            }
+
+        });
+    });
+</script>
+</body>
+</html>

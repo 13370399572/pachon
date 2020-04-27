@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.feng.mybatisdao.TbUserDao">
+	<!-- TbUser的resultMap,column是给数据库列起的别名,它对应property类的属性 -->
+	<resultMap id="result_TbUser_Map" type="com.feng.entity.TbUser">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="passwd" property="passwd" />
+		<result column="address" property="address" />
+		<result column="level" property="level" />
+		<result column="phone" property="phone" />
+		<result column="email" property="email" />
+		<result column="salt" property="salt" />
+		<result column="valid" property="valid" />
+		<result column="dept_id" property="deptId" />
+		<result column="created_user" property="createdUser" />
+		<result column="update_user" property="updateUser" />
+	</resultMap>
+
+	<!-- assist是查询辅助工具类, ${req.require}表示列名,#{req.value}表示值它是防SQL注入的 -->
+	<sql id="assist">
+		<where>
+			<foreach collection="require" item="req" separator=" ">
+				${req.require}
+				<if test="req.value != null">
+					#{req.value}
+				</if>
+				<if test="req.values != null">
+					<foreach collection="req.values" item="value" separator=",">
+						#{value}
+					</foreach>
+				</if>
+				<if test="req.customRequire !=null">
+					<foreach collection="req.customRequire" item="cr" separator=" ">
+						${cr.require}
+						<if test="cr.value != null">
+							#{cr.value}
+						</if>
+						<if test="cr.values != null">
+							<foreach collection="cr.values" item="value"
+								separator=",">
+								#{value}
+							</foreach>
+						</if>
+						<if test="cr.suffix != null"> ${cr.suffix}</if>
+					</foreach>
+				</if>
+				<if test="req.suffix != null"> ${req.suffix}</if>
+			</foreach>
+		</where>
+	</sql>
+
+	<!-- updateAssist用于更新数据查询辅助工具类,作用assist与一致 -->
+	<sql id="updateAssist">
+		<where>
+			<foreach collection="assist.require" item="req" separator=" ">
+				${req.require}
+				<if test="req.value != null">
+					#{req.value}
+				</if>
+				<if test="req.values != null">
+					<foreach collection="req.values" item="value" separator=",">
+						#{value}
+					</foreach>
+				</if>
+				<if test="req.customRequire !=null">
+					<foreach collection="req.customRequire" item="cr" separator=" ">
+						${cr.require}
+						<if test="cr.value != null">
+							#{cr.value}
+						</if>
+						<if test="cr.values != null">
+							<foreach collection="cr.values" item="value"
+								separator=",">
+								#{value}
+							</foreach>
+						</if>
+						<if test="cr.suffix != null"> ${cr.suffix}</if>
+					</foreach>
+				</if>
+				<if test="req.suffix != null"> ${req.suffix}</if>
+			</foreach>
+		</where>
+	</sql>
+
+	<!-- 数据库中表名为:tb_user的列名 -->
+	<sql id="tb_user_Column">
+		id,name,passwd,address,level,phone,email,salt,valid,dept_id,created_user,update_user
+	</sql>
+
+	<!--获得类名为:TbUser对应的数据库表的数据总行数 -->
+	<select id="getTbUserRowCount" parameterType="com.feng.common.Assist" resultType="java.lang.Long">
+		select count(*) from tb_user
+		<if test="require!=null">
+			<include refid="assist" />
+		</if>
+	</select>
+	
+	<!-- 获得类名为:TbUser对应数据库中表的数据集合 -->
+	<select id="selectTbUser" parameterType="com.feng.common.Assist" resultMap="result_TbUser_Map">
+		select
+		<if test="distinct !=null">${distinct}</if>
+		<choose>
+			<when test="resultColumn!=null">${resultColumn}</when>
+			<otherwise>
+				<include refid="tb_user_Column" />
+			</otherwise>
+		</choose>
+		from tb_user
+		<if test="require!=null">
+			<include refid="assist" />
+		</if>
+		<if test="order !=null">${order}</if>
+		<choose>
+			<when test="startRow !=null and rowSize !=null">LIMIT #{startRow},#{rowSize} </when>
+			<when test="rowSize !=null">LIMIT #{rowSize}</when>
+		</choose>
+	</select>
+	<!-- 通过TbUser的id获得对应数据库中表的数据对象 -->
+	<select id="selectTbUserById" parameterType="Integer" resultMap="result_TbUser_Map">
+		select
+		<include refid="tb_user_Column" />
+		from tb_user
+		where id = #{id}
+	</select>
+	
+	<!-- 获得一个TbUser对象,以参数TbUser对象中不为空的属性作为条件进行查询 -->
+	<select id="selectTbUserObjSingle" parameterType="com.feng.entity.TbUser" resultMap="result_TbUser_Map">
+		select
+		<include refid="tb_user_Column" />
+		from tb_user
+		<where>
+		<if test="name != null"> and name = #{name}</if>
+		<if test="passwd != null"> and passwd = #{passwd}</if>
+		<if test="address != null"> and address = #{address}</if>
+		<if test="level != null"> and level = #{level}</if>
+		<if test="phone != null"> and phone = #{phone}</if>
+		<if test="email != null"> and email = #{email}</if>
+		<if test="salt != null"> and salt = #{salt}</if>
+		<if test="valid != null"> and valid = #{valid}</if>
+		<if test="deptId != null"> and dept_id = #{deptId}</if>
+		<if test="createdUser != null"> and created_user = #{createdUser}</if>
+		<if test="updateUser != null"> and update_user = #{updateUser}</if>
+		<if test="id != null"> and id = #{id} </if>
+		</where>
+		LIMIT 1
+	</select>
+	
+	<!-- 获得TbUser对象,以参数TbUser对象中不为空的属性作为条件进行查询 -->
+	<select id="selectTbUserByObj" parameterType="com.feng.entity.TbUser" resultMap="result_TbUser_Map">
+		select
+		<include refid="tb_user_Column" />
+		from tb_user
+		<where>
+		<if test="name != null"> and name = #{name}</if>
+		<if test="passwd != null"> and passwd = #{passwd}</if>
+		<if test="address != null"> and address = #{address}</if>
+		<if test="level != null"> and level = #{level}</if>
+		<if test="phone != null"> and phone = #{phone}</if>
+		<if test="email != null"> and email = #{email}</if>
+		<if test="salt != null"> and salt = #{salt}</if>
+		<if test="valid != null"> and valid = #{valid}</if>
+		<if test="deptId != null"> and dept_id = #{deptId}</if>
+		<if test="createdUser != null"> and created_user = #{createdUser}</if>
+		<if test="updateUser != null"> and update_user = #{updateUser}</if>
+		<if test="id != null"> and id = #{id} </if>
+		</where>
+	</select>
+
+	<!-- 将TbUser插入到对应数据库的表中,包括属性值为null的数据 -->
+	<insert id="insertTbUser" parameterType="com.feng.entity.TbUser">
+		insert into 
+		tb_user (id,name,passwd,address,level,phone,email,salt,valid,dept_id,created_user,update_user) 
+		values(#{id},#{name},#{passwd},#{address},#{level},#{phone},#{email},#{salt},#{valid},#{deptId},#{createdUser},#{updateUser})
+	</insert>
+
+	<!-- 将TbUser中属性值不为null的数据,插入到对应数据库的表中 -->
+	<insert id="insertNotNullTbUser" parameterType="com.feng.entity.TbUser">
+		insert into tb_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id,</if>
+			<if test="name != null">name,</if>
+			<if test="passwd != null">passwd,</if>
+			<if test="address != null">address,</if>
+			<if test="level != null">level,</if>
+			<if test="phone != null">phone,</if>
+			<if test="email != null">email,</if>
+			<if test="salt != null">salt,</if>
+			<if test="valid != null">valid,</if>
+			<if test="deptId != null">dept_id,</if>
+			<if test="createdUser != null">created_user,</if>
+			<if test="updateUser != null">update_user,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="name != null">#{name},</if>
+			<if test="passwd != null">#{passwd},</if>
+			<if test="address != null">#{address},</if>
+			<if test="level != null">#{level},</if>
+			<if test="phone != null">#{phone},</if>
+			<if test="email != null">#{email},</if>
+			<if test="salt != null">#{salt},</if>
+			<if test="valid != null">#{valid},</if>
+			<if test="deptId != null">#{deptId},</if>
+			<if test="createdUser != null">#{createdUser},</if>
+			<if test="updateUser != null">#{updateUser},</if>
+		</trim>
+	</insert>
+
+	<!-- 将TbUser批量插入到对应数据库的表中 -->
+	<insert id="insertTbUserByBatch" parameterType="ArrayList">
+		insert into tb_user(id,name,passwd,address,level,phone,email,salt,valid,dept_id,created_user,update_user) values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.id},#{item.name},#{item.passwd},#{item.address},#{item.level},#{item.phone},#{item.email},#{item.salt},#{item.valid},#{item.deptId},#{item.createdUser},#{item.updateUser})
+		</foreach>
+	</insert>
+	
+	<!-- 通过TbUser的id将数据库表中对应的数据删除 -->
+	<delete id="deleteTbUserById" parameterType="Integer">
+		delete from tb_user
+		where  id  =  #{id}
+	</delete>
+
+	<!-- 通过辅助工具Assist中的条件将TbUser对应的数据库表的数据删除 -->
+	<delete id="deleteTbUserByAssist" parameterType="com.feng.common.Assist">
+		delete from tb_user
+		<if test="require!=null">
+			<include refid="assist" />
+		</if>
+	</delete>
+	<!-- 通过TbUser的id将TbUser的数据更新到数据库中对应的表,包括值null的数据 -->
+	<update id="updateTbUserById" parameterType="com.feng.entity.TbUser"> 
+		update tb_user set
+		<set>
+			name = #{name} , 
+			passwd = #{passwd} , 
+			address = #{address} , 
+			level = #{level} , 
+			phone = #{phone} , 
+			email = #{email} , 
+			salt = #{salt} , 
+			valid = #{valid} , 
+			dept_id = #{deptId} , 
+			created_user = #{createdUser} , 
+			update_user = #{updateUser} , 
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- 通过TbUser的id将TbUser中属性值不为null的数据更新到数据库对应的表中 -->
+	<update id="updateNotNullTbUserById" parameterType="com.feng.entity.TbUser">
+		update tb_user
+		<set>
+					<if test="name != null">name = #{name},</if>
+					<if test="passwd != null">passwd = #{passwd},</if>
+					<if test="address != null">address = #{address},</if>
+					<if test="level != null">level = #{level},</if>
+					<if test="phone != null">phone = #{phone},</if>
+					<if test="email != null">email = #{email},</if>
+					<if test="salt != null">salt = #{salt},</if>
+					<if test="valid != null">valid = #{valid},</if>
+					<if test="deptId != null">dept_id = #{deptId},</if>
+					<if test="createdUser != null">created_user = #{createdUser},</if>
+					<if test="updateUser != null">update_user = #{updateUser},</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- 通过辅助工具Assist中的条件将TbUser中的数据更新到数据库对应的表中,包括值为null的数据 -->
+	<update id="updateTbUser" parameterType="map">
+		update tb_user
+		<set>
+			id = #{enti.id},
+			name = #{enti.name},
+			passwd = #{enti.passwd},
+			address = #{enti.address},
+			level = #{enti.level},
+			phone = #{enti.phone},
+			email = #{enti.email},
+			salt = #{enti.salt},
+			valid = #{enti.valid},
+			dept_id = #{enti.deptId},
+			created_user = #{enti.createdUser},
+			update_user = #{enti.updateUser},
+		</set>
+		<if test="assist.require!=null">
+			<include refid="updateAssist" />
+		</if>
+	</update>
+
+	<!-- 通过辅助工具Assist中的条件将TbUser中属性值不为null的数据更新到数据库对应的表中 -->
+	<update id="updateNotNullTbUser" parameterType="map">
+		update tb_user
+		<set>
+			<if test="enti.id != null">id = #{enti.id},</if>
+			<if test="enti.name != null">name = #{enti.name},</if>
+			<if test="enti.passwd != null">passwd = #{enti.passwd},</if>
+			<if test="enti.address != null">address = #{enti.address},</if>
+			<if test="enti.level != null">level = #{enti.level},</if>
+			<if test="enti.phone != null">phone = #{enti.phone},</if>
+			<if test="enti.email != null">email = #{enti.email},</if>
+			<if test="enti.salt != null">salt = #{enti.salt},</if>
+			<if test="enti.valid != null">valid = #{enti.valid},</if>
+			<if test="enti.deptId != null">dept_id = #{enti.deptId},</if>
+			<if test="enti.createdUser != null">created_user = #{enti.createdUser},</if>
+			<if test="enti.updateUser != null">update_user = #{enti.updateUser},</if>
+		</set>
+		<if test="assist.require!=null">
+			<include refid="updateAssist" />
+		</if>
+	</update>
+</mapper>

@@ -1,0 +1,64 @@
+@charset "UTF-8";
+
+/** 注册页 **/
+.register_bg{background:url(../images/register_bg.jpg) no-repeat top center;}
+.register_main{background:url(../images/register_main.jpg) no-repeat top center; height:1045px; width:1000px; margin:0 auto; padding-top:42px;}
+
+.register_page{ padding:50px 0 0 235px; width:600px; height:600px;}
+.reg_page_left{float:left; width:340px; position: relative; top: -10px;}
+.reg_page_right{float:left; height:530px; padding-left:40px; padding-top:30px; width:210px; color:#888; border-left:1px solid #dedede;}
+.reg_page_right ul li{ margin-bottom: 10px;}
+.reg_page_right ul li:first-child{border-right:1px dotted #b1b1b1;}
+.reg_page_right li a em{width:24px; height:24px; display:inline-block; vertical-align:middle; overflow:hidden; margin-right:5px; background:url(../images/other_login_icos.png) no-repeat;}
+.reg_page_right li a:hover { opacity: .8;}
+.reg_page_right .qq_gray { background-position: 0px 0px;}
+.reg_page_right .wx_gray { background-position: -28px 0px;}
+.reg_page_right .wb_gray { background-position: -57px 0px;}
+
+.reg_title{ height:70px; width:600px; line-height:26px;  margin:0 0px 30px 0; color:#665852;}
+.reg_title h2{color:#ff6a00; font-size:20px; font-family:microsoft yahei;}
+.register ul{  height: auto;}
+.register ul li{ margin-top:20px; width:297px; color:#666; position:relative;}
+.register ul li b{ position:absolute; bottom: -20px; left: 0px; height: 20px; line-height: 20px;}
+.register ul li span{ width:94px; position:absolute; top:8px; left:5px; line-height:26px; font-size:14px; color:#b8b8b8}
+.register .reg_input,.register ul li.sort_input input{ border-radius: 5px; height:26px; padding:8px 0; line-height:26px; width:252px;border:solid 1px #ccc; padding-left:42px; *vertical-align:middle;}
+.register ul li input[type=text]:focus,.register ul li input[type=password]:focus{border:1px solid #76c4f2; color:#3098d5; outline:none;}
+.register ul .ac input.check{width:13px; height:13px; vertical-align:middle; margin-right:4px;}
+.register ul li .index_button{ margin-top:0; }
+.register ul li.addicted_tip{border-top:1px dotted #b1b1b1; padding:15px 0 0 90px; height:65px; margin-top:10px;color:#888;}
+.register ul li img{ vertical-align:middle;}
+label.error,label.correct{background:url(../images/index_little_icons.png) no-repeat left center; _background:url(../images/index_little_icons_ie6.gif) no-repeat left center; padding-left:22px; vertical-align:middle; }
+label.correct{ background-position: -54px -54px;} 
+label.error{background-position: -54px -35px; color:#fe0202; }
+
+.register .rico { position:absolute; top: 9px; left: 9px; width:28px; height:26px; margin-right:4px; background:url(../images/reg_btns.gif) no-repeat left center; vertical-align:middle;}
+.register .reg_ico1{background-position:0 0;}
+.register .reg_ico2{background-position:0 -26px;}
+.register .reg_ico3{background-position:0 -52px;}
+.register .reg_ico4{background-position:0 -78px;}
+.register .reg_ico5{background-position:0 -104px;}
+.register .reg_ico6{background-position:0 -136px;}
+.register .reg_ico7{background-position:0 -176px;}
+
+.register_main .commer_foot{background:none; border:none; margin-top:20px; color:#fff;}
+.register_main .commer_foot a{color:#fff;}
+.index_button {width: 272px; height: 48px; color: #fff; font-weight: bold; text-align: center; line-height: 48px; font-size: 16px; margin-top: 15px; border: none; border-radius: 4px; background: #00baff; cursor: pointer; font-family: 'microsoft yahei';}
+.g-footer { color: #fff; line-height: 30px; padding: 38px 0 0px 0; background: transparent;}
+.g-footer a { color: #fff;}
+.g-footer .g-main { width: auto;}
+.g-sidefun,.bianpao_link { display: none;}
+
+/* 2018年1月24日 10:28:34 添加手机注册 */
+.register-tab { display: block; width: 298px; height: 38px; border-bottom: 1px solid #dededf; }
+.register-tab li { height: 38px; line-height: 36px; padding: 0 2px; color: #999; font-size: 18px; position:relative; bottom: -1px; cursor: pointer; float: left;}
+.register-tab .tab1 { margin-right: 66px; margin-left: 40px; }
+.register-tab .active { height: 36px; line-height: 36px; border-bottom: 2px solid #3fb2e8; color: #333; cursor: default;}
+.none { display: none; }
+.red { color: #f00; }
+input::-webkit-input-placeholder {color:    #999; font-family: 'microsoft yahei'; }
+input:-moz-placeholder {color: #999; font-family: 'microsoft yahei';}
+input::-moz-placeholder {color: #999; font-family: 'microsoft yahei'; } 
+input:-ms-input-placeholder {color: #999; font-family: 'microsoft yahei'; }
+.register .reg_input_s { width: 164px; }
+.reg_button { width: 78px; height: 44px; line-height: 44px; text-align: center; border: 1px solid #ccc; border-radius: 5px; background: #f9f9f9; font-family: 'microsoft yahei'; color: #999; position:absolute; top: 0px; right: 0px; }
+.register .php-code { position:absolute; top: 10px; right: 0px; cursor: pointer; }

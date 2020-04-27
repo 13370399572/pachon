@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="referrer" content="no-referrer" />
+<!--页面头部添加-->
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+<link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+<title>张炳鑫的私人影院</title>
+
+<style>
+ul, li {
+	list-style: none;
+}
+
+.pic-item {
+	cursor: pointer;
+	display: block;
+	width: 180px;
+	height: 236px;
+	margin: 2px;
+	border: 2px solid #01AAED;
+}
+
+.picWrap {
+	display: inline-block;
+	width: 180px;
+	height: 236px;
+	margin: 20px 4px;
+}
+
+.fl {
+	float: left;
+}
+
+.title {
+	padding-left: 20px;
+	display: inline-block;
+	width: 280px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.clear-fix::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+#filmPage {
+	/*height: 20px;*/
+	clear: both;
+}
+</style>
+
+<script th:src="@{/layui/layui.js}"></script>
+<script th:src="@{/layui/jquery-2.2.3.min.js}"></script>
+	<script th:src="@{/layui/jQuery-2.2.0.js}"></script>
+</head>
+<body >
+	<div th:include="common/header::common"></div>
+	<div style="padding: 5px 0px 0px 1090px" id="zhang">
+		<ui>
+		<input placeholder="请输入电影名称" id="wudi" type="text" name="title" /></ui>
+		<ui th:onclick="zhang()"><a style="font-size: 10px;color:red">点击搜索</a></ui>
+	</div>
+	<div class="layui-container">
+		<!--<form class="form-inline search-form " action="">-->
+		<!--<div class="form-group">-->
+		<!--<label for="exampleInputName2" class="title-label">电影名称</label>-->
+		<!--<input type="text" class="form-control" id="exampleInputName2" placeholder="输入电影名称：">-->
+		<!--</div>-->
+
+		<!--<button type="submit" class="btn btn-primary search-btn">查找</button>-->
+		<!--</form>-->
+		<ul class="list-group">
+			<li>
+
+				<div th:each="film:${filmPage.content}" class="picWrap fl">
+					<img th:src="@{${film.imgUrl}}" class="pic-item" src="#"
+						th:onclick="play([[${film.url}]])" /> <a th:text="${film.title}"
+						th:href="'https://jx.618g.com/?url='+${film.url}" class="title"
+						target="_blank"> </a>
+				</div>
+			</li>
+		</ul>
+		<div id="filmPage">
+			<div></div>
+		</div>
+	</div>
+   <audio id="audio" src="https://link.hhtjim.com/163/1330348068.mp3" hidden="true"></audio>
+	<!--<div th:include="common/footer::common" >-->
+	<script>
+
+	
+
+    function play(url) {
+        //可以更换解析url：http://api.baiyug.vip/index.php
+        debugger;
+        window.open("https://jx.618g.com/?url=" + url, "_blank")
+    }
+    
+    function zhang(){
+     var input=	document.getElementById("wudi").value;
+     window.location.href = "/films/list.htm?title="+input;
+     
+    }
+    layui.use('laypage', function () {
+    	 document.getElementById("audio").play() 
+    	debugger;
+        var laypage = layui.laypage;
+        var total = [[${filmPage.totalElements}]];
+        var size = [[${filmPage.size}]];
+        var num =[[${filmPage.number}]];
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'filmPage' //注意，这里的 test1 是 ID，不用加 # 号
+            , count: total //数据总数，从服务端得到
+            ,curr:num+1
+            , limit: size
+            , limits: [18, 24, 30, 36]
+            , jump: function (obj, first) {
+                //obj包含了当前分页的所有参数，比如：
+                console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                console.log(obj.limit); //得到每页显示的条数
+
+                //首次不执行
+                if (!first) {
+                	
+                	  var input11  =    window.location.href.split("title")[1];
+                      debugger;
+                       if(typeof(input11) == "undefined"){
+                       	debugger;
+                       window.location.href = "/films/list.htm?num="+obj.curr+"&size="+obj.limit;
+                       }else{
+                       var input  =    window.location.href.split("title")[1].split("&")[0].split("=")[1]
+                       window.location.href = "/films/list.htm?title="+input+"&num="+obj.curr+"&size="+obj.limit;
+                       }
+                    //do something
+               //  var input =    window.location.href.split("title")[1].split("&")[0].split("=")[1]
+                  
+                }
+            }
+
+        });
+    });
+    
+    
+</script>
+</body>
+</html>
